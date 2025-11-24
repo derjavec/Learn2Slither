@@ -3,10 +3,10 @@ import random
 
 class Board:
 
-
     def __init__(self, size=10):
         self.size = size
         self.snake_pos = []
+        self.snake_dir = None
         self.red_apples = []
         self.green_apples = []
         self.matrix = []
@@ -22,7 +22,7 @@ class Board:
     def _place_snake(self, size = 3):
         x = random.randint(0, self.size - 1)
         y = random.randint(0, self.size - 3)
-        self.snake_pos = [(x, y + i) for i in range(size)]
+        self.snake_pos = [(x + i, y) for i in range(size)]
         return self.snake_pos
     
 
@@ -39,19 +39,28 @@ class Board:
     
 
     def move(self, action):
+        opposites = {
+            'UP': 'DOWN',
+            'DOWN': 'UP',
+            'LEFT': 'RIGHT',
+            'RIGHT': 'LEFT'
+        }
+        if self.snake_dir is None and action == 'RIGHT':
+            self.snake_pos.reverse()
+            self.snake_dir = action
         x, y = self.snake_pos[0]
-        if action == 'UP':
-            new_head = (x  , y - 1)
-        elif action == 'DOWN':
-            new_head = (x , y + 1)
-        elif action == 'RIGHT':
-            new_head = (x + 1, y)
-        elif action == 'LEFT':
-            new_head = (x - 1, y)
-        else:
-            raise ValueError("Invalid action")
-        self.snake_pos = [new_head] + self.snake_pos[:-1]
-        self.update_matrix()
+        if action != opposites[self.snake_dir]:
+            if action == 'UP':
+                new_head = (x  , y - 1)
+            elif  action == 'DOWN':
+                new_head = (x , y + 1)
+            elif  action == 'RIGHT':
+                new_head = (x + 1, y )
+            elif  action == 'LEFT':
+                new_head = (x - 1, y)
+            self.snake_pos = [new_head] + self.snake_pos[:-1]
+            self.snake_dir = action
+            self.update_matrix()
     
 
     def update_matrix(self):
