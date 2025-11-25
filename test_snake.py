@@ -9,7 +9,7 @@ key_to_action = {
 
 board = Board(size=10)
 board.reset()
-while not board.go_flag:
+while not board.done:
     board.print_board()
     key = input("Movimiento (w=arriba s=abajo a=izq d=der): ")
 
