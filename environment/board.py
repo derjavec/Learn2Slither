@@ -19,7 +19,7 @@ class Board:
     
     def step(self, action):
         self.move(action)
-        self.state = self.get_state()
+        self.get_state()
         return self.state, self.done
 
     def get_state(self):

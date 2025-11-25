@@ -18,6 +18,7 @@ while not board.done:
         continue
 
     action = key_to_action[key]
-    board.move(action)
+    state, done = board.step(action)
+    print(state)
 print("GAME OVER!")
 board.print_board()

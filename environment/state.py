@@ -16,7 +16,7 @@ def get_state(self):
 
         if x < 0 or x >= self.size or y < 0 or y >= self.size or (x, y) in self.snake_pos[1:]:
             reward = -3
-        elif (dir == 'UP' and self.snake_dir == 'DOWN') or \
+        if (dir == 'UP' and self.snake_dir == 'DOWN') or \
              (dir == 'DOWN' and self.snake_dir == 'UP') or \
              (dir == 'LEFT' and self.snake_dir == 'RIGHT') or \
              (dir == 'RIGHT' and self.snake_dir == 'LEFT'):
@@ -28,9 +28,8 @@ def get_state(self):
 
         rewards[dir] = reward
 
-    state = [snake_x, snake_y, green_x, green_y,
+    self.state = [snake_x, snake_y, green_x, green_y,
              rewards['UP'], rewards['DOWN'], rewards['LEFT'], rewards['RIGHT']]
-    return state
 
 
 
