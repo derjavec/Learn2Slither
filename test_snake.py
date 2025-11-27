@@ -1,24 +1,16 @@
 from environment.board import Board
 from interpreter.state import get_state
+from interpreter.action import direction_to_action
+from agent.decision import take_random_decision
 
-key_to_action = {
-    'w': 'UP',
-    's': 'DOWN',
-    'a': 'LEFT',
-    'd': 'RIGHT'
-}
 
 board = Board(size=10)
 board.reset()
 while not board.done:
     board.print_board()
-    key = input("Movimiento (w=arriba s=abajo a=izq d=der): ")
+    d = take_random_decision(board.state)
 
-    if key not in key_to_action:
-        print("Tecla inválida")
-        continue
-
-    action = key_to_action[key]
+    action = direction_to_action(board.snake_dir, d)
     environment = board.step(action)
     state = get_state(environment)
     print(state)
