@@ -1,4 +1,5 @@
 from environment.board import Board
+from interpreter.state import get_state
 
 key_to_action = {
     'w': 'UP',
@@ -18,7 +19,8 @@ while not board.done:
         continue
 
     action = key_to_action[key]
-    state, done = board.step(action)
+    environment = board.step(action)
+    state = get_state(environment)
     print(state)
 print("GAME OVER!")
 board.print_board()

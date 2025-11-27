@@ -3,7 +3,7 @@ from environment.reset import reset
 from environment.move import move
 from environment.collide import game_over, eat_apples
 from environment.matrix import update_matrix, print_board
-from environment.state import get_state
+
 
 class Board:
     
@@ -19,13 +19,9 @@ class Board:
     
     def step(self, action):
         self.move(action)
-        self.get_state()
-        return self.state, self.done
+        return self
 
-    def get_state(self):
-        get_state(self)
-
-
+    
     def reset(self, snake_size = 3,green_apples_q = 2, red_apples_q = 1):
         reset(self, snake_size = 3, green_apples_q = 2, red_apples_q = 1)
         self.update_matrix()
