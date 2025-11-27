@@ -13,6 +13,6 @@ while not board.done:
     action = direction_to_action(board.snake_dir, d)
     environment = board.step(action)
     state = get_state(environment)
-    print(state)
+
 print("GAME OVER!")
 board.print_board()
