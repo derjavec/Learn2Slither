@@ -43,6 +43,11 @@ def look(self, direction):
             break
     return one_dir
 
+
+def state_to_key(state):
+    return tuple(tuple(row) for row in state)
+
+
 def get_state(self):
     forward = self.snake_dir
     backward = opposites[forward]
@@ -54,7 +59,8 @@ def get_state(self):
         look(self, right),
         look(self, backward)
     ]
-    return state
+    decoded_state = state_to_key(state)
+    return decoded_state
         
 
             
