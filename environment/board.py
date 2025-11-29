@@ -13,7 +13,7 @@ class Board:
         self.reward = 0
         self.size = size
         self.snake_pos = []
-        self.snake_dir = None
+        self.snake_dir = 'LEFT'
         self.red_apples = []
         self.green_apples = []
         self.matrix = []
@@ -22,12 +22,10 @@ class Board:
     def step(self, action):
         self.calculate_reward(action)
         self.move(action)
-        return self
 
 
     def calculate_reward(self, action):
         calculate_reward(self, action)
-        print('reward', self.reward)
     
     
     def reset(self, snake_size = 3,green_apples_q = 2, red_apples_q = 1):

@@ -19,7 +19,7 @@ def calculate_reward(self, action):
     elif c == 'R':
         self.reward = -2
     elif c == 'G':
-        self.reward = 1
+        self.reward = 2
     else:
-        self.reward = 0
+        self.reward = 1
     

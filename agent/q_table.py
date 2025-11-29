@@ -1,12 +1,13 @@
 action_id = {
-    'UP' : 0,
-    'RIGHT' : 1,
-    'DOWN' : 2,
-    'LEFT' : 3
+    'forward' : 0,
+    'right' : 1,
+    'backward' : 2,
+    'left' : 3
 }
 
 def update_q_table(q_table, state, action, reward, next_state, alpha=0.1, gamma=0.9):
-
+    if state is None:
+        return q_table
     if state not in q_table:
         q_table[state] = [0,0,0,0]
 

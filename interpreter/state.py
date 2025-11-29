@@ -25,8 +25,8 @@ dir_to_delta = {
     'RIGHT': (1, 0)
 }
 
-def look(self, direction):
-    snake_x, snake_y = self.snake_pos[0]
+def look(board, direction):
+    snake_x, snake_y = board.snake_pos[0]
     dx, dy = dir_to_delta[direction]
     x = snake_x
     y = snake_y
@@ -34,10 +34,10 @@ def look(self, direction):
     while True:
         x += dx
         y += dy
-        if x < 0 or x >= self.size or y < 0 or y >= self.size:
+        if x < 0 or x >= board.size or y < 0 or y >= board.size:
             one_dir.append('W')
             break
-        c = self.matrix[y][x]
+        c = board.matrix[y][x]
         one_dir.append(c)
         if c != '0':
             break
@@ -48,16 +48,19 @@ def state_to_key(state):
     return tuple(tuple(row) for row in state)
 
 
-def get_state(self):
-    forward = self.snake_dir
+def get_state(board):
+    
+    if not board.snake_pos:
+        return
+    forward = board.snake_dir
     backward = opposites[forward]
     right = rights[forward]
     left = lefts[forward]
     state = [
-        look(self, forward),
-        look(self, left),
-        look(self, right),
-        look(self, backward)
+        look(board, forward),
+        look(board, right),
+        look(board, backward),
+        look(board, left)
     ]
     decoded_state = state_to_key(state)
     return decoded_state

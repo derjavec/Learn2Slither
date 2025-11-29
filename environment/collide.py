@@ -1,6 +1,9 @@
 from environment.reset import random_empty_cell
 
 def game_over(self):
+    if not self.snake_pos:
+        self.done = True
+        return        
     x, y = self.snake_pos[0]
     if x >= self.size or x < 0:
         self.done = True
@@ -13,11 +16,14 @@ def game_over(self):
     
 
 def eat_apples(self):
+
     for pos in self.red_apples:
         if pos == self.snake_pos[0]:
             self.red_apples.remove(pos)
-            self.red_apples.append(random_empty_cell(self))             
-            self.snake_pos.pop()               
+            self.red_apples.append(random_empty_cell(self))            
+            self.snake_pos.pop()
+            if not self.snake_pos:
+                return             
     for pos in self.green_apples:
         if pos == self.snake_pos[0]:
             self.green_apples.remove(pos)
