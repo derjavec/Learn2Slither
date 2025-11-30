@@ -15,11 +15,11 @@ def calculate_reward(self, action):
     else:
         c = self.matrix[y][x]
     if c == 'W' or c == 'S':
-        self.reward = -3
+        self.reward = -100
     elif c == 'R':
-        self.reward = -2
+        self.reward = -5
     elif c == 'G':
-        self.reward = 2
+        self.reward = 50
     else:
-        self.reward = 1
+        self.reward = 0.1
     

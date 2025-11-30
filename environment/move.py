@@ -1,7 +1,15 @@
 
+opposites = {
+    'UP': 'DOWN',
+    'DOWN': 'UP',
+    'LEFT': 'RIGHT',
+    'RIGHT': 'LEFT'
+}
 
 def move(self, action):
 
+    if action == opposites[self.snake_dir]:
+        return    
     x, y = self.snake_pos[0]
     if action == 'UP':
         new_head = (x  , y - 1)
