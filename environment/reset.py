@@ -1,6 +1,10 @@
 import random
 
 def reset(self, snake_size ,green_apples_q, red_apples_q):
+    snake_size = int(snake_size)
+    green_apples_q = int(green_apples_q)
+    red_apples_q = int(red_apples_q)
+
     place_snake(self, snake_size)
     self.green_apples = place_apples(self, green_apples_q)
     self.red_apples = place_apples(self, red_apples_q)

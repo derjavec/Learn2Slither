@@ -1,0 +1,10 @@
+{
+    "episodes": 15000,
+    "batch_size": 10,
+    "e_greedy": 0.3,
+    "alpha": 0.15,
+    "gamma": 0.92,
+    "size": 12,
+    "green_apples": 3,
+    "red_apples": 1
+}

@@ -26,6 +26,7 @@ dir_to_delta = {
 }
 
 def snake_view(board, direction):
+    
     snake_x, snake_y = board.snake_pos[0]
     dx, dy = dir_to_delta[direction]
     x = snake_x
@@ -44,32 +45,38 @@ def snake_view(board, direction):
     return one_dir
 
 
-def state_to_key(state):
-    return tuple(tuple(row) for row in state)
-
-dangerous = ['W', 'S', 'R']
+dangerous = ['W', 'S']
+def distance_to_apple(view):
+    for i, c in enumerate(view):
+        if c == 'G':
+            return i + 1
+    return 0
 
 def analyze_view(view):
 
     first = view[0]
 
     danger_first_step = 1 if first in dangerous else 0
-
+    green_in_first_step = 1 if first == 'G' else 0
+    red_in_first_step = 1 if first == 'R' else 0
     apple_in_path = 1 if 'G' in view else 0
+    distance = distance_to_apple(view)
 
-    blocked_before_apple = 0
-    if apple_in_path:
-        for c in view:
-            if c == 'G':
-                break
-            if c in dangerous:
-                blocked_before_apple = 1
-                break
+    # blocked_before_apple = 0
+    # if apple_in_path:
+    #     for c in view:
+    #         if c == 'G':
+    #             break
+    #         if c in dangerous:
+    #             blocked_before_apple = 1
+    #             break
 
-    return danger_first_step, apple_in_path, blocked_before_apple
+    return danger_first_step, green_in_first_step, red_in_first_step, apple_in_path, distance
 
 
 def get_state(board):
+    if not board.snake_pos:
+        return
     forward = board.snake_dir
     left = lefts[forward]
     right = rights[forward]
@@ -83,8 +90,8 @@ def get_state(board):
     features = []
 
     for v in views:
-        d, a, b = analyze_view(v)
-        features.extend([d, a, b])
+        d, g, r, a, d_a = analyze_view(v)
+        features.extend([d, g, r, a, d_a])
 
     return tuple(features)
 

@@ -6,7 +6,7 @@ from agent.q_table import update_q_table
 
 
 q_table = {}
-for episode in range(100):
+for episode in range(10000):
     board = Board(size=10)
     board.reset()
     movements = 0
