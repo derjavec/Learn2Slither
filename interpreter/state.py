@@ -1,4 +1,3 @@
-
 opposites = {
     'UP': 'DOWN',
     'DOWN': 'UP',
@@ -46,32 +45,43 @@ def snake_view(board, direction):
 
 
 dangerous = ['W', 'S']
-def distance_to_apple(view):
+def calculate_distance(size, view, x):
     for i, c in enumerate(view):
-        if c == 'G':
-            return i + 1
+        if c == x:
+            if i == 0:
+                return 1
+            elif i <= size // 3:
+                return 2
+            else:
+                return 3
     return 0
 
-def analyze_view(view):
 
-    first = view[0]
+def analyze_view(board, view):
 
-    danger_first_step = 1 if first in dangerous else 0
-    green_in_first_step = 1 if first == 'G' else 0
-    red_in_first_step = 1 if first == 'R' else 0
-    apple_in_path = 1 if 'G' in view else 0
-    distance = distance_to_apple(view)
+    # first  = view[0] if len(view) > 0 else 'W'
+    # second = view[1] if len(view) > 1 else 'W'
+    # third  = view[2] if len(view) > 2 else 'W'
 
-    # blocked_before_apple = 0
-    # if apple_in_path:
-    #     for c in view:
-    #         if c == 'G':
-    #             break
-    #         if c in dangerous:
-    #             blocked_before_apple = 1
-    #             break
+    # d1 = 1 if first in dangerous else 0
 
-    return danger_first_step, green_in_first_step, red_in_first_step, apple_in_path, distance
+    # d2 = 1 if second in dangerous else 0
+    # g2 = 1 if second == 'G' else 0
+    # r2 = 1 if second == 'R' else 0
+
+    # d3 = 1 if third in dangerous else 0
+    # g3 = 1 if third == 'G' else 0
+    # r3 = 1 if third == 'R' else 0
+    dw = calculate_distance(board.size, view, 'W')
+    ds = calculate_distance(board.size, view, 'S')
+    # dr = calculate_distance(board.size, view, 'R')
+    dg = calculate_distance(board.size, view, 'G')
+
+    cg = 0
+    if dg != 0 and dg < board.last_min_dist:
+        cg = 1
+
+    return dw, ds,  dg, cg
 
 
 def get_state(board):
@@ -90,8 +100,8 @@ def get_state(board):
     features = []
 
     for v in views:
-        d, g, r, a, d_a = analyze_view(v)
-        features.extend([d, g, r, a, d_a])
+        dw, ds, dg, cg = analyze_view(board, v)
+        features.extend([dw, ds,  dg, cg])
 
     return tuple(features)
 

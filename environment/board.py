@@ -16,6 +16,7 @@ class Board:
         self.snake_dir = 'LEFT'
         self.red_apples = []
         self.green_apples = []
+        self.last_min_dist = size
         self.matrix = []
         self.state = []
     

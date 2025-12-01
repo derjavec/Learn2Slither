@@ -6,7 +6,7 @@ import numpy as np
 
 DEFAULT_CONFIG = {
     "episodes": 10000,
-    "batch_size": 8,
+    "batch_size": 100,
     "e_greedy": 0.5,
     "alpha": 0.1,
     "gamma": 0.9,
