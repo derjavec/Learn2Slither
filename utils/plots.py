@@ -24,7 +24,6 @@ def plot_snake_length(model_history, batch_size):
     plt.xlabel("Episodes", fontsize=12)
     plt.title("Snake Length", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.legend(fontsize=12)
     plt.tight_layout()
     plt.show()
 
@@ -39,7 +38,6 @@ def plot_movements(model_history, batch_size):
     plt.xlabel("Episodes", fontsize=12)
     plt.title("Movements", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.legend(fontsize=12)
     plt.tight_layout()
     plt.show()
 
@@ -52,7 +50,6 @@ def plot_q_table_length(model_history):
     plt.xlabel("Episodes", fontsize=12)
     plt.title("Q_Table Length", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.legend(fontsize=12)
     plt.tight_layout()
     plt.show()
 

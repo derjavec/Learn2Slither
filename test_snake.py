@@ -6,12 +6,12 @@ from agent.q_table import update_q_table
 
 
 q_table = {}
-for episode in range(10000):
+for episode in range(5):
     board = Board(size=10)
     board.reset()
     movements = 0
     while not board.done:
-        # board.print_board()
+        board.print_board()
 
         movements += 1
         state = get_state(board)
@@ -19,10 +19,12 @@ for episode in range(10000):
         action = direction_to_action(board.snake_dir, d)
         # print(action)
         # print(f'snake_dir {board.snake_dir}, decision {d}, action {action}, reward {board.reward}')
+        print('reward antes de actualizar ',board.reward)
         board.step(action)
-        # print('reward ',board.reward)
+        board.print_board()
         new_state = get_state(board)
+        print('reward despues de actualizar',board.reward)
         q_table = update_q_table(q_table, state, d, board.reward, new_state, alpha=0.1, gamma=0.9)
-        # print('q table ',q_table)
+        print('q table ',q_table)
     print(f'episode {episode} snake length {len(board.snake_pos)} movements {movements}, q_table {len(q_table)}')
 

@@ -43,16 +43,18 @@ def calculate_reward(self, action):
 
     g = get_closest(x, y, self.green_apples)
 
-    self.reward = 0.1
+    self.reward = 0
 
-    if c == 'W' or c == 'S':
+    if c == 'W':
+        self.reward = -80
+    if c == 'S':
         self.reward = -100
     elif c == 'R':
-        self.reward = -30
+        self.reward = -50
     elif c == 'G':
         self.reward = 100
     elif is_moving_towards_green(snake_x, snake_y, dx, dy, self.green_apples) and g < self.last_min_dist:
-        self.reward = 50
+        self.reward = 30
 
     self.last_min_dist = g
 

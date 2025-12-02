@@ -48,6 +48,7 @@ dangerous = ['W', 'S']
 def calculate_distance(size, view, x):
     for i, c in enumerate(view):
         if c == x:
+            # return i + 1
             if i == 0:
                 return 1
             elif i <= size // 3:
@@ -59,33 +60,28 @@ def calculate_distance(size, view, x):
 
 def analyze_view(board, view):
 
-    # first  = view[0] if len(view) > 0 else 'W'
-    # second = view[1] if len(view) > 1 else 'W'
-    # third  = view[2] if len(view) > 2 else 'W'
+    first  = view[0] if len(view) > 0 else 'W'
+    second = view[1] if len(view) > 1 else 'W'
+    third  = view[2] if len(view) > 2 else 'W'
 
-    # d1 = 1 if first in dangerous else 0
+    d1 = 1 if first in dangerous else 0
+    d2 = 1 if second in dangerous else 0
+    d3 = 1 if third in dangerous else 0
 
-    # d2 = 1 if second in dangerous else 0
-    # g2 = 1 if second == 'G' else 0
-    # r2 = 1 if second == 'R' else 0
-
-    # d3 = 1 if third in dangerous else 0
-    # g3 = 1 if third == 'G' else 0
-    # r3 = 1 if third == 'R' else 0
-    dw = calculate_distance(board.size, view, 'W')
-    ds = calculate_distance(board.size, view, 'S')
-    # dr = calculate_distance(board.size, view, 'R')
+    dr = calculate_distance(board.size, view, 'R')
     dg = calculate_distance(board.size, view, 'G')
 
     cg = 0
     if dg != 0 and dg < board.last_min_dist:
         cg = 1
 
-    return dw, ds,  dg, cg
+    return d1, d2, d3, dg, dr, cg
 
 
 def get_state(board):
     if not board.snake_pos:
+        return
+    if board.done:
         return
     forward = board.snake_dir
     left = lefts[forward]
@@ -100,8 +96,8 @@ def get_state(board):
     features = []
 
     for v in views:
-        dw, ds, dg, cg = analyze_view(board, v)
-        features.extend([dw, ds,  dg, cg])
+        d1, d2, d3, dg, dr, cg= analyze_view(board, v)
+        features.extend([d1, d2, d3, dg, dr, cg])
 
     return tuple(features)
 
