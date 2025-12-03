@@ -19,6 +19,8 @@ class Board:
         self.last_min_dist = size
         self.matrix = []
         self.state = []
+        self.eaten_green = 0
+        self.eaten_red = 0
     
     def step(self, action):
         self.calculate_reward(action)

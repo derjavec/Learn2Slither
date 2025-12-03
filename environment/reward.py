@@ -43,7 +43,7 @@ def calculate_reward(self, action):
 
     g = get_closest(x, y, self.green_apples)
 
-    self.reward = 0
+    self.reward = -0.1
 
     if c == 'W':
         self.reward = -80

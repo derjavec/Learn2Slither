@@ -24,6 +24,13 @@ dir_to_delta = {
     'RIGHT': (1, 0)
 }
 
+dir_to_id = {
+    'UP': 0,
+    'RIGHT': 1,
+    'DOWN': 2,
+    'LEFT': 3,
+}
+
 def snake_view(board, direction):
     
     snake_x, snake_y = board.snake_pos[0]
@@ -68,7 +75,7 @@ def analyze_view(board, view):
     d2 = 1 if second in dangerous else 0
     d3 = 1 if third in dangerous else 0
 
-    dr = calculate_distance(board.size, view, 'R')
+    dr = 1 if first == 'R' else 0
     dg = calculate_distance(board.size, view, 'G')
 
     cg = 0
@@ -79,10 +86,9 @@ def analyze_view(board, view):
 
 
 def get_state(board):
-    if not board.snake_pos:
+    if not board.snake_pos or board.done:
         return
-    if board.done:
-        return
+
     forward = board.snake_dir
     left = lefts[forward]
     right = rights[forward]
@@ -94,10 +100,10 @@ def get_state(board):
     ]
 
     features = []
-
+    abs_d = dir_to_id[board.snake_dir]
     for v in views:
         d1, d2, d3, dg, dr, cg= analyze_view(board, v)
-        features.extend([d1, d2, d3, dg, dr, cg])
+        features.extend([d1, d2, d3, dg, dr, cg, abs_d])
 
     return tuple(features)
 

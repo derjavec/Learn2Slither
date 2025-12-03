@@ -1,59 +1,70 @@
 import matplotlib.pyplot as plt
 
-def avg_per_batch(batch_size, x):
-    avg = []
-    batch_i = []
-    for i in range(0, len(x), batch_size):
-        batch = x[i : i + batch_size]
-        avg.append(sum(batch)/len(batch))
-        batch_i.append(i)
-    return avg, batch_i
-        
 
+def plot_red_apples(model_stats):
 
+    models = sorted(model_stats.keys())
+    red_apples = [model_stats[m]['avg_red_apples'] for m in models]
 
-def plot_snake_length(model_history, batch_size):
-
-
-    episodes = sorted(model_history.keys())
-
-    snake_lens = [model_history[e]['snake_len'] for e in episodes]
-    snake_avg, batch = avg_per_batch(batch_size, snake_lens)
     plt.figure(figsize=(10, 6))
-    plt.plot(batch, snake_avg)
-    plt.xlabel("Episodes", fontsize=12)
-    plt.title("Snake Length", fontsize=14)
+    plt.bar(models, red_apples)
+
+    plt.xlabel("Model ID", fontsize=12)
+    plt.ylabel("Red Apples", fontsize=12)
+    plt.title("Red Apples eaten per Model", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     plt.show()
 
 
-def plot_movements(model_history, batch_size):
+def plot_green_apples(model_stats):
 
-    episodes = sorted(model_history.keys())
-    movements = [model_history[e]['movements'] for e in episodes]
-    movements_avg, batch = avg_per_batch(batch_size, movements)
+    models = sorted(model_stats.keys())
+    green_apples = [model_stats[m]['avg_green_apples'] for m in models]
+
     plt.figure(figsize=(10, 6))
-    plt.plot(batch, movements_avg)
-    plt.xlabel("Episodes", fontsize=12)
-    plt.title("Movements", fontsize=14)
+    plt.bar(models, green_apples)
+
+    plt.xlabel("Model ID", fontsize=12)
+    plt.ylabel("Green Apples", fontsize=12)
+    plt.title("Green Apples eaten per Model", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     plt.show()
 
-def plot_q_table_length(model_history):
+def plot_movements(model_stats):
 
-    episodes = sorted(model_history.keys())
-    q_table_lens = [model_history[e]['q_table_len'] for e in episodes]
+    models = sorted(model_stats.keys())
+    movements = [model_stats[m]['avg_movements'] for m in models]
+
     plt.figure(figsize=(10, 6))
-    plt.plot(episodes, q_table_lens)
-    plt.xlabel("Episodes", fontsize=12)
-    plt.title("Q_Table Length", fontsize=14)
+    plt.bar(models, movements)
+
+    plt.xlabel("Model ID", fontsize=12)
+    plt.ylabel("Movements", fontsize=12)
+    plt.title("Movements per Model", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     plt.show()
 
-def plot_model_history(model_history, batch_size):
-    plot_snake_length(model_history, batch_size)
-    plot_movements(model_history, batch_size)
-    plot_q_table_length(model_history)
+def plot_snake_length(model_stats):
+
+    models = sorted(model_stats.keys())
+    q_table_lens = [model_stats[m]['avg_snake_len'] for m in models]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(models, q_table_lens)
+
+    plt.xlabel("Model ID", fontsize=12)
+    plt.ylabel("Snake length", fontsize=12)
+    plt.title("Snake Length per Model", fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_stats(model_stats):
+    plot_snake_length(model_stats)
+    plot_movements(model_stats)
+    plot_green_apples(model_stats)
+    plot_red_apples(model_stats)
