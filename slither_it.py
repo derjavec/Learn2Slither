@@ -73,8 +73,8 @@ def main():
         print(f"Avg green apples: {avg_green}")
         print(f"Avg red apples: {avg_red}")
 
-    # if episodes > 1:
-    #     plot_stats(model_stats)
+    if episodes > 1:
+        plot_stats(model_stats)
 
 
 

@@ -44,8 +44,8 @@ def run_episodes(q_table, config, n_episodes):
 
 
 def main():
-    config = get_config()
-    parsed = check_add_episodes()
+    parser, config = get_config()
+    parsed = check_add_episodes(parser)
 
     if parsed is None:
         q_table = run_episodes({}, config, config['episodes'])

@@ -109,13 +109,13 @@ def get_config() -> dict:
 
     check_config(config)
 
-    return config
+    return parser, config
 
 
-def check_add_episodes():
-    parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
-    parser.add_argument("--add_episodes", type=int)
-    parser.add_argument("--model_id", type=int)
+def check_add_episodes(parser):
+    # parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
+    # parser.add_argument("--add_episodes", type=int)
+    # parser.add_argument("--model_id", type=int)
     args = parser.parse_args()
 
     if args.add_episodes is None:
