@@ -6,54 +6,8 @@ from interpreter.state import get_state
 from agent.decision import take_decision
 from interpreter.action import direction_to_action
 from utils.plots import plot_stats
+from utils.history import load_models
 import time
-
-
-def deserialize_keys(d):
-    """Convierte claves string que representan tuplas en tuplas reales."""
-    out = {}
-    for k, v in d.items():
-        if isinstance(k, str) and k.startswith("(") and k.endswith(")"):
-            try:
-                key = eval(k)
-            except:
-                key = k
-        else:
-            key = k
-
-        if isinstance(v, dict):
-            out[key] = deserialize_keys(v)
-        else:
-            out[key] = v
-
-    return out
-
-
-def load_models(model_id=None):
-    path = "generated_files/history.json"
-    if not os.path.exists(path):
-        raise ValueError("No history.json found")
-
-    with open(path, "r", encoding="utf-8") as f:
-        all_histories = json.load(f)
-
-    result = []
-
-    for item in all_histories:
-        cfg = item["config"]
-        qtab = deserialize_keys(item["q_table"])
-
-        if model_id is not None:
-            if item.get("id") == model_id:
-                result.append({"config": cfg, "q_table": qtab})
-                return result
-        else:
-            result.append({"config": cfg, "q_table": qtab})
-
-    if model_id is not None and not result:
-        raise ValueError(f"Model ID {model_id} not found")
-
-    return result
 
 
 def main():

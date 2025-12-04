@@ -86,6 +86,8 @@ def get_config() -> dict:
 
     parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
 
+    parser.add_argument("--add_episodes", type=int, help="Adding episodes to training")
+    parser.add_argument("--model_id", type=int, help="Adding episodes to training")
     parser.add_argument("--episodes", type=int, help="Number of episodes")
     parser.add_argument("--batch_size", type=int, help="Batch size")
     parser.add_argument("--e_greedy", type=float, help="Epsilon greedy probability")
@@ -108,4 +110,19 @@ def get_config() -> dict:
     check_config(config)
 
     return config
+
+
+def check_add_episodes():
+    parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
+    parser.add_argument("--add_episodes", type=int)
+    parser.add_argument("--model_id", type=int)
+    args = parser.parse_args()
+
+    if args.add_episodes is None:
+        if args.model_id:
+            raise ValueError("model_id only valid with add_episodes")
+        return None
+
+    return args.add_episodes, args.model_id
+
 

@@ -1,35 +1,69 @@
 from environment.board import Board
-from config.parser import get_config
+from config.parser import get_config, check_add_episodes
 from interpreter.state import get_state_training
 from interpreter.action import direction_to_action
 from agent.decision import take_decision_training
 from agent.q_table import update_q_table
-from utils.history import add_to_history
+from utils.history import add_to_history, load_models, rewrite_history_with_updates
 from utils.update_reward import penalize_repeted_states
 
 
-def main():
-    config = get_config()
-    q_table = {}
-    for episode in range(config['episodes']):
+
+def init_q_table(add_episodes, model_id):
+    if not add_episodes:
+        return {}
+    
+    model = load_models(model_id)[0]
+    return model["q_table"]
+
+
+def run_episodes(q_table, config, n_episodes):
+    for episode in range(n_episodes):
         board = Board(config['size'])
         board.reset(3, config['green_apples'], config['red_apples'])
+
         movements = 0
         while not board.done:
             movements += 1
             state = get_state_training(board)
-
             d = take_decision_training(q_table, state, config['e_greedy'], board.snake_dir)
             action = direction_to_action(board.snake_dir, d)
 
             board.step(action)
-            
             new_state = get_state_training(board)
+
             reward = penalize_repeted_states(board, state)
-            q_table = update_q_table(q_table, state, d, reward, new_state, config['alpha'], config['gamma'])
-        
-        print(f'episode {episode} snake length {len(board.snake_pos)} movements {movements}, q_table {len(q_table)}')
-    add_to_history(config, q_table)
+            q_table = update_q_table(
+                q_table, state, d, reward, new_state,
+                config['alpha'], config['gamma']
+            )
+
+        print(f"episode {episode} | snake len {len(board.snake_pos)} | moves {movements} | q_table {len(q_table)}")
+
+    return q_table
+
+
+def main():
+    config = get_config()
+    parsed = check_add_episodes()
+
+    if parsed is None:
+        q_table = run_episodes({}, config, config['episodes'])
+        add_to_history(config, q_table)
+        return
+
+    add_n, model_id = parsed
+
+    models = load_models(model_id)
+    updated_models = []
+    for m in models:
+        print(f"Adding {add_n} episodes to model ID {m['id']}")
+        q_new = run_episodes(m["q_table"], m["config"], add_n)
+        updated_models.append({"id": m["id"], "config": m["config"], "q_table": q_new})
+
+    rewrite_history_with_updates(updated_models, add_n)
+
+
 
 if __name__ == '__main__':
     main()

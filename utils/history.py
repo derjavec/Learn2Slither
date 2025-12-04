@@ -59,4 +59,78 @@ def add_to_history(config, q_table):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(all_histories, f, indent=4)
 
-    return 
+    return
+
+def deserialize_keys(d):
+    """Convierte claves string que representan tuplas en tuplas reales."""
+    out = {}
+    for k, v in d.items():
+        if isinstance(k, str) and k.startswith("(") and k.endswith(")"):
+            try:
+                key = eval(k)
+            except:
+                key = k
+        else:
+            key = k
+
+        if isinstance(v, dict):
+            out[key] = deserialize_keys(v)
+        else:
+            out[key] = v
+
+    return out
+
+
+def load_models(model_id=None):
+    path = "generated_files/history.json"
+    if not os.path.exists(path):
+        raise ValueError("No history.json found")
+
+    with open(path, "r", encoding="utf-8") as f:
+        all_histories = json.load(f)
+
+    result = []
+
+    for item in all_histories:
+        idx = item["id"]
+        cfg = item["config"]
+        qtab = deserialize_keys(item["q_table"])
+
+        if model_id is not None:
+            if item.get("id") == model_id:
+                result.append({"id":idx, "config": cfg, "q_table": qtab})
+                return result
+        else:
+            result.append({"id":idx, "config": cfg, "q_table": qtab})
+
+    if model_id is not None and not result:
+        raise ValueError(f"Model ID {model_id} not found")
+
+    return result
+
+
+def rewrite_history_with_updates(updated_models, add_n):
+    path = "generated_files/history.json"
+    with open(path, "r", encoding="utf-8") as f:
+        all_histories = json.load(f)
+
+    updated_by_id = {m["id"]: m for m in updated_models}
+
+    final = []
+    for item in all_histories:
+        model_id = item["id"]
+
+        if model_id in updated_by_id:
+            new_m = updated_by_id[model_id]
+            episodes = new_m["config"]["episodes"] + add_n
+            new_m["config"]["episodes"] = episodes
+            final.append({
+                "id": model_id,
+                "config": new_m["config"],
+                "q_table": serialize_keys(new_m["q_table"])
+            })
+        else:
+            final.append(item)
+
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(final, f, indent=2)
