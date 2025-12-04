@@ -8,26 +8,28 @@ dir_to_delta = {
 }
 
 
-def is_moving_towards_green(snake_x, snake_y, dx, dy, green_apples):
+def is_moving_towards_green(snake_x, snake_y, dx, dy, green_apples, idx_closest):
 
-    for gx, gy in green_apples:
-        if dx != 0 and gy == snake_y:
-            if (dx > 0 and gx > snake_x) or (dx < 0 and gx < snake_x):
-                return True
-        elif dy != 0 and gx == snake_x:
-            if (dy > 0 and gy > snake_y) or (dy < 0 and gy < snake_y):
-                return True
+    gx, gy = green_apples[idx_closest]
+    if dx != 0 and gy == snake_y:
+        if (dx > 0 and gx > snake_x) or (dx < 0 and gx < snake_x):
+            return True
+    elif dy != 0 and gx == snake_x:
+        if (dy > 0 and gy > snake_y) or (dy < 0 and gy < snake_y):
+            return True
     return False
 
 def get_closest(x, y, green_apples): 
-    min_dist = float('inf') 
-    for gx, gy in green_apples: 
-        dx = x - gx 
-        dy = y - gy 
-        d = math.sqrt(dx**2 + dy**2) 
-        if d < min_dist: 
-            min_dist = d 
-    return min_dist
+    min_dist = float('inf')
+    idx_closest = 0
+    for i, (gx, gy) in enumerate(green_apples):
+        dx = x - gx
+        dy = y - gy
+        d = math.sqrt(dx**2 + dy**2)
+        if d < min_dist:
+            min_dist = d
+            idx_closest = i
+    return min_dist, idx_closest
 
 
 def calculate_reward(self, action):
@@ -41,9 +43,9 @@ def calculate_reward(self, action):
     else:
         c = self.matrix[y][x]
 
-    g = get_closest(x, y, self.green_apples)
+    g, idx_closest = get_closest(x, y, self.green_apples)
 
-    self.reward = -0.1
+    self.reward = 0
 
     if c == 'W':
         self.reward = -80
@@ -53,10 +55,12 @@ def calculate_reward(self, action):
         self.reward = -50
     elif c == 'G':
         self.reward = 100
-    elif is_moving_towards_green(snake_x, snake_y, dx, dy, self.green_apples) and g < self.last_min_dist:
-        self.reward = 30
+    elif is_moving_towards_green(snake_x, snake_y, dx, dy, self.green_apples, idx_closest) and g < self.last_min_dist:
+        self.reward = 50
 
     self.last_min_dist = g
+
+
 
     
 

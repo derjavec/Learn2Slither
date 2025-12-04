@@ -59,10 +59,11 @@ def load_models(model_id=None):
 def main():
     parser = argparse.ArgumentParser(description="Run trained Slither model")
     parser.add_argument("--model_id", type=int)
+    parser.add_argument("--episodes", type=int)
     args = parser.parse_args()
 
     history = load_models(args.model_id)
-    episodes = 1 if len(history) == 1 else 10
+    episodes = args.episodes if args.episodes else  10
 
     model_stats = {}
 
@@ -82,13 +83,13 @@ def main():
                 if movements > 0 :
                     if episodes == 1 or time.time() - start > 2:
                         board.print_board()
+                        print(decision)
                         print('Q Table blocking:', q_table[state])
-                        # eps = 0.2
-                    # if time.time() - start > 2.5:
-                    #     print('breaking the loop')
-                    #     break
+                    if time.time() - start > 2.5:
+                        print('breaking the loop')
+                        break
                 state = get_state(board)
-                decision = take_decision(q_table, state, eps, snake_dir=board.snake_dir)
+                decision = take_decision(q_table, state,  board.snake_dir, cfg["size"])
                 action = direction_to_action(board.snake_dir, decision)
                 movements += 1
                 board.step(action)
@@ -118,8 +119,8 @@ def main():
         print(f"Avg green apples: {avg_green}")
         print(f"Avg red apples: {avg_red}")
 
-    if episodes > 1:
-        plot_stats(model_stats)
+    # if episodes > 1:
+    #     plot_stats(model_stats)
 
 
 

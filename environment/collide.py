@@ -27,7 +27,7 @@ def eat_apples(self):
                 return             
     for pos in self.green_apples:
         if pos == self.snake_pos[0]:
-            self.eaten_green =+ 1
+            self.eaten_green += 1
             self.green_apples.remove(pos)
             self.green_apples.append(random_empty_cell(self))
             x, y = self.snake_pos[-1]

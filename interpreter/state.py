@@ -75,7 +75,7 @@ def analyze_view(board, view):
     d2 = 1 if second in dangerous else 0
     d3 = 1 if third in dangerous else 0
 
-    dr = 1 if first == 'R' else 0
+    dr = calculate_distance(board.size, view, 'R')
     dg = calculate_distance(board.size, view, 'G')
 
     cg = 0
@@ -83,6 +83,34 @@ def analyze_view(board, view):
         cg = 1
 
     return d1, d2, d3, dg, dr, cg
+
+def get_state_training(board):
+    if not board.snake_pos or board.done:
+        return
+
+    forward = board.snake_dir
+    left = lefts[forward]
+    right = rights[forward]
+
+    views = [
+        snake_view(board, forward),
+        snake_view(board, right),
+        snake_view(board, left)
+    ]
+
+    features = []
+    for v in views:
+        d1, d2, d3, dg, dr, cg= analyze_view(board, v)
+        features.extend([d1, d2, d3, dg, dr, cg])
+    abs_d = dir_to_id[board.snake_dir]
+    features.append(abs_d)
+    features = tuple(features)
+    if features in board.visited_states:
+        board.visited_states[features] += 1
+    else:
+        board.visited_states[features] = 0
+
+    return features
 
 
 def get_state(board):
@@ -100,13 +128,16 @@ def get_state(board):
     ]
 
     features = []
-    abs_d = dir_to_id[board.snake_dir]
     for v in views:
         d1, d2, d3, dg, dr, cg= analyze_view(board, v)
-        features.extend([d1, d2, d3, dg, dr, cg, abs_d])
-
-    return tuple(features)
-
-        
+        features.extend([d1, d2, d3, dg, dr, cg])
+    abs_d = dir_to_id[board.snake_dir]
+    features.append(abs_d)
+    # features = tuple(features)
+    # if features in board.visited_states:
+    #     board.visited_states[features] += 1
+    # else:
+    #     board.visited_states[features] = 0
+    return tuple(features)    
 
             

@@ -18,7 +18,7 @@ class Board:
         self.green_apples = []
         self.last_min_dist = size
         self.matrix = []
-        self.state = []
+        self.visited_states = {}
         self.eaten_green = 0
         self.eaten_red = 0
     

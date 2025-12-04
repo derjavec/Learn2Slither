@@ -26,12 +26,11 @@ def serialize_keys(d):
     return {str(k): v for k, v in d.items()}
 
 
-def add_to_history(config, q_table, model_history):
+def add_to_history(config, q_table):
     
     history = {
         'id' : 0,
         'config' : config,
-        'model_history' : model_history,
         'q_table': serialize_keys(q_table)
     }
 
