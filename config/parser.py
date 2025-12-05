@@ -5,7 +5,7 @@ import ast
 import numpy as np
 
 DEFAULT_CONFIG = {
-    "episodes": 10000,
+    "sessions": 10000,
     "batch_size": 100,
     "e_greedy": 0.3,
     "alpha": 0.1,
@@ -52,6 +52,7 @@ def replace_dict_values(base: dict, new: dict) -> dict:
     for k, v in new.items():
         if v is not None:
             base[k] = v
+    
     return base
 
 
@@ -59,7 +60,7 @@ def check_config(config: dict):
     """
     Validate Q-learning configuration.
     """
-    required_keys = ["episodes", "batch_size", "e_greedy", "alpha", "gamma", "size", "green_apples", "red_apples"]
+    required_keys = ["sessions", "batch_size", "e_greedy", "alpha", "gamma", "size", "green_apples", "red_apples"]
     apples = ["green_apples", "red_apples"]
     coef = ["alpha", "gamma", "e_greedy"]
     for key in required_keys:
@@ -86,9 +87,9 @@ def get_config() -> dict:
 
     parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
 
-    parser.add_argument("--add_episodes", type=int, help="Adding episodes to training")
+    parser.add_argument("--add_sessions", type=int, help="Adding episodes to training")
     parser.add_argument("--model_id", type=int, help="Adding episodes to training")
-    parser.add_argument("--episodes", type=int, help="Number of episodes")
+    parser.add_argument("--sessions", type=int, help="Number of sessions")
     parser.add_argument("--batch_size", type=int, help="Batch size")
     parser.add_argument("--e_greedy", type=float, help="Epsilon greedy probability")
     parser.add_argument("--alpha", type=float, help="Learning rate")
@@ -109,20 +110,20 @@ def get_config() -> dict:
 
     check_config(config)
 
-    return parser, config
+    return args.add_sessions, args.model_id, config
 
 
-def check_add_episodes(parser):
-    # parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
-    # parser.add_argument("--add_episodes", type=int)
-    # parser.add_argument("--model_id", type=int)
-    args = parser.parse_args()
+# def check_add_episodes(parser):
+#     # parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
+#     # parser.add_argument("--add_episodes", type=int)
+#     # parser.add_argument("--model_id", type=int)
+#     args = parser.parse_args()
 
-    if args.add_episodes is None:
-        if args.model_id:
-            raise ValueError("model_id only valid with add_episodes")
-        return None
+#     if args.sessions is None:
+#         if args.load:
+#             raise ValueError("model_id only valid with add_episodes")
+#         return None
 
-    return args.add_episodes, args.model_id
+#     return args.sessions, args.load
 
 

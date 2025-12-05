@@ -8,7 +8,7 @@ def same_config(config1,config2) -> bool:
     Only compares selected relevant keys.
     """
     keys_to_compare = [
-        "episodes",
+        "sessions",
         "batch_size",
         "alpha",
         "gamma",
@@ -122,8 +122,8 @@ def rewrite_history_with_updates(updated_models, add_n):
 
         if model_id in updated_by_id:
             new_m = updated_by_id[model_id]
-            episodes = new_m["config"]["episodes"] + add_n
-            new_m["config"]["episodes"] = episodes
+            sessions = new_m["config"]["sessions"] + add_n
+            new_m["config"]["sessions"] = sessions
             final.append({
                 "id": model_id,
                 "config": new_m["config"],

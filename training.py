@@ -1,5 +1,5 @@
 from environment.board import Board
-from config.parser import get_config, check_add_episodes
+from config.parser import get_config
 from interpreter.state import get_state_training
 from interpreter.action import direction_to_action
 from agent.decision import take_decision_training
@@ -9,16 +9,16 @@ from utils.update_reward import penalize_repeted_states
 
 
 
-def init_q_table(add_episodes, model_id):
-    if not add_episodes:
+def init_q_table(add_sessions, model_id):
+    if not add_sessions:
         return {}
     
     model = load_models(model_id)[0]
     return model["q_table"]
 
 
-def run_episodes(q_table, config, n_episodes):
-    for episode in range(n_episodes):
+def run_sessions(q_table, config, n_sessions):
+    for episode in range(n_sessions):
         board = Board(config['size'])
         board.reset(3, config['green_apples'], config['red_apples'])
 
@@ -44,24 +44,20 @@ def run_episodes(q_table, config, n_episodes):
 
 
 def main():
-    parser, config = get_config()
-    parsed = check_add_episodes(parser)
-
-    if parsed is None:
-        q_table = run_episodes({}, config, config['episodes'])
+    add_sessions, model_id, config = get_config()
+    if add_sessions is None:
+        q_table = run_sessions({}, config, config['sessions'])
         add_to_history(config, q_table)
         return
-
-    add_n, model_id = parsed
 
     models = load_models(model_id)
     updated_models = []
     for m in models:
-        print(f"Adding {add_n} episodes to model ID {m['id']}")
-        q_new = run_episodes(m["q_table"], m["config"], add_n)
+        print(f"Adding {add_sessions} sessions to model ID {m['id']}")
+        q_new = run_sessions(m["q_table"], m["config"], add_sessions)
         updated_models.append({"id": m["id"], "config": m["config"], "q_table": q_new})
 
-    rewrite_history_with_updates(updated_models, add_n)
+    rewrite_history_with_updates(updated_models, add_sessions)
 
 
 

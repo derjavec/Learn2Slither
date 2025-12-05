@@ -1,4 +1,4 @@
-episodes = 20000
+sessions = 20000
 batch_size = 20
 e_greedy = 0.6
 alpha = 0.05

@@ -5,6 +5,8 @@ action = ['forward', 'right', 'left']
 def take_decision(q_table, state, snake_dir, size):
     if state not in q_table:
         d = action[random.randint(0, 2)]
+        # print(f'elige del estado:{state}, al azar la opcion {d}')
+
     else:
         diff = max(q_table[state]) - min(q_table[state])
         q_values = [int(x) for x in q_table[state]]
@@ -14,7 +16,7 @@ def take_decision(q_table, state, snake_dir, size):
             q_max = max(q_table[state])
             q_max_idx = q_table[state].index(q_max)
         d = action[q_max_idx]
-    # print(f'elige del estado:{state}, y tabla {q_table[state]} la opcion {d}')
+        # print(f'elige del estado:{state}, y tabla {q_table[state]} la opcion {d}')
     return d
 
 def take_decision_training(q_table, state, eps, snake_dir):

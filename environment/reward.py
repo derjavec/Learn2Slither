@@ -56,7 +56,7 @@ def calculate_reward(self, action):
     elif c == 'G':
         self.reward = 100
     elif is_moving_towards_green(snake_x, snake_y, dx, dy, self.green_apples, idx_closest) and g < self.last_min_dist:
-        self.reward = 50
+        self.reward = 30
 
     self.last_min_dist = g
 
