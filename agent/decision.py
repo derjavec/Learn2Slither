@@ -1,31 +1,59 @@
+"""
+Decision module for the Snake RL agent.
+
+This file provides the action-selection logic both for training
+(epsilon-greedy) and for inference (exploitation with safeguards).
+"""
+
 import random
+from typing import Dict, List, Tuple
 
-action = ['forward', 'right', 'left']
+ACTIONS = ["forward", "right", "left"]
 
-def take_decision(q_table, state, snake_dir, size):
+
+def take_decision(
+    q_table: Dict[Tuple, List[float]],
+    state: Tuple,
+    snake_dir: str,
+    size: int
+) -> str:
+    """
+    Select an action based on the Q-table for inference mode.
+    """
     if state not in q_table:
-        d = action[random.randint(0, 2)]
-        # print(f'elige del estado:{state}, al azar la opcion {d}')
+        return random.choice(ACTIONS)
 
-    else:
-        diff = max(q_table[state]) - min(q_table[state])
-        q_values = [int(x) for x in q_table[state]]
-        if diff < size * 3 and min(q_table[state]) > 0 or 0 in q_values:
-            q_max_idx = random.randint(0, 2)
-        else:
-            q_max = max(q_table[state])
-            q_max_idx = q_table[state].index(q_max)
-        d = action[q_max_idx]
-        # print(f'elige del estado:{state}, y tabla {q_table[state]} la opcion {d}')
-    return d
+    q_values = q_table[state]
+    q_min = min(q_values)
+    q_max = max(q_values)
+    diff = q_max - q_min
 
-def take_decision_training(q_table, state, eps, snake_dir):
-    if state not in q_table or random.random() < eps:
-        d = action[random.randint(0, 2)]
-        # print('elige por azar:', d)
+    q_values_int = [int(x) for x in q_values]
+
+    if (diff < size * 3 and q_min > 0):
+        idx = random.randint(0, 2)
     else:
-        q_max = max(q_table[state])
-        q_max_idx = q_table[state].index(q_max)
-        d = action[q_max_idx]
-    # print(f'elige del estado:{state}, y tabla {q_table[state]} la opcion {d}')
-    return d
+        idx = q_values.index(q_max)
+
+    return ACTIONS[idx]
+
+
+def take_decision_training(
+    q_table: Dict[Tuple, List[float]],
+    state: Tuple,
+    eps: float,
+    snake_dir: str
+) -> str:
+    """
+    Epsilon-greedy action selection for training.
+    """
+    explore = state not in q_table or random.random() < eps
+
+    if explore:
+        return random.choice(ACTIONS)
+
+    q_values = q_table[state]
+    q_max = max(q_values)
+    idx = q_values.index(q_max)
+
+    return ACTIONS[idx]

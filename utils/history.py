@@ -1,7 +1,12 @@
+"""
+Utilities for saving, loading, and updating Q-learning model histories.
+"""
+
 import os
 import json
 
-def same_config(config1,config2) -> bool:
+
+def same_config(config1: dict, config2: dict) -> bool:
     """
     Compare two model configurations.
 
@@ -16,30 +21,56 @@ def same_config(config1,config2) -> bool:
         "green_apples",
         "red_apples"
     ]
-
     for key in keys_to_compare:
         if config1.get(key) != config2.get(key):
             return False
     return True
 
-def serialize_keys(d):
+
+def serialize_keys(d: dict) -> dict:
+    """
+    Convert dictionary keys to strings.
+    """
     return {str(k): v for k, v in d.items()}
 
 
-def add_to_history(config, q_table):
-    
+def deserialize_keys(d: dict) -> dict:
+    """
+    Convert string keys representing tuples back into tuple keys recursively.
+    """
+    out = {}
+    for k, v in d.items():
+        if isinstance(k, str) and k.startswith("(") and k.endswith(")"):
+            try:
+                key = eval(k)
+            except Exception:
+                key = k
+        else:
+            key = k
+
+        if isinstance(v, dict):
+            out[key] = deserialize_keys(v)
+        else:
+            out[key] = v
+    return out
+
+
+def add_to_history(config: dict, q_table: dict) -> None:
+    """
+    Add a new model configuration and Q-table to history.json.
+    """
     history = {
-        'id' : 0,
-        'config' : config,
-        'q_table': serialize_keys(q_table)
+        "id": 0,
+        "config": config,
+        "q_table": serialize_keys(q_table)
     }
 
-    output_folder = 'generated_files'
-    filename = 'history.json'
+    output_folder = "generated_files"
+    filename = "history.json"
     os.makedirs(output_folder, exist_ok=True)
     path = os.path.join(output_folder, filename)
+
     if not os.path.exists(path):
-        history["id"] = 0
         with open(path, "w", encoding="utf-8") as f:
             json.dump([history], f, indent=4)
         return
@@ -49,39 +80,20 @@ def add_to_history(config, q_table):
 
     for item in all_histories:
         if "config" in item and same_config(item["config"], config):
-            return 
+            return
 
     existing_ids = [h.get("id", -1) for h in all_histories]
-    new_id = max(existing_ids) + 1 if existing_ids else 0
-    history["id"] = new_id
+    history["id"] = max(existing_ids) + 1 if existing_ids else 0
     all_histories.append(history)
 
     with open(path, "w", encoding="utf-8") as f:
         json.dump(all_histories, f, indent=4)
 
-    return
 
-def deserialize_keys(d):
-    """Convierte claves string que representan tuplas en tuplas reales."""
-    out = {}
-    for k, v in d.items():
-        if isinstance(k, str) and k.startswith("(") and k.endswith(")"):
-            try:
-                key = eval(k)
-            except:
-                key = k
-        else:
-            key = k
-
-        if isinstance(v, dict):
-            out[key] = deserialize_keys(v)
-        else:
-            out[key] = v
-
-    return out
-
-
-def load_models(model_id=None):
+def load_models(model_id: int = None) -> list[dict]:
+    """
+    Load Q-learning models from history.json.
+    """
     path = "generated_files/history.json"
     if not os.path.exists(path):
         raise ValueError("No history.json found")
@@ -98,10 +110,10 @@ def load_models(model_id=None):
 
         if model_id is not None:
             if item.get("id") == model_id:
-                result.append({"id":idx, "config": cfg, "q_table": qtab})
+                result.append({"id": idx, "config": cfg, "q_table": qtab})
                 return result
         else:
-            result.append({"id":idx, "config": cfg, "q_table": qtab})
+            result.append({"id": idx, "config": cfg, "q_table": qtab})
 
     if model_id is not None and not result:
         raise ValueError(f"Model ID {model_id} not found")
@@ -109,7 +121,10 @@ def load_models(model_id=None):
     return result
 
 
-def rewrite_history_with_updates(updated_models, add_n):
+def rewrite_history_with_updates(updated_models: list[dict], add_n: int) -> None:
+    """
+    Update sessions count and Q-tables in history.json for a set of models.
+    """
     path = "generated_files/history.json"
     with open(path, "r", encoding="utf-8") as f:
         all_histories = json.load(f)
@@ -122,8 +137,7 @@ def rewrite_history_with_updates(updated_models, add_n):
 
         if model_id in updated_by_id:
             new_m = updated_by_id[model_id]
-            sessions = new_m["config"]["sessions"] + add_n
-            new_m["config"]["sessions"] = sessions
+            new_m["config"]["sessions"] += add_n
             final.append({
                 "id": model_id,
                 "config": new_m["config"],

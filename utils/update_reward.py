@@ -1,7 +1,7 @@
-def penalize_repeted_states(board, state):
-    if board.visited_states[state] > board.size * 2:
-        reward = board.reward - 10
-    else:
-        reward = board.reward
-    return reward
-
+def penalize_repeated_states(board, state):
+    """
+    Apply a penalty if the snake revisits a state too often.
+    """
+    if board.visited_states.get(state, 0) > board.size * 2:
+        return board.reward - 10
+    return board.reward
