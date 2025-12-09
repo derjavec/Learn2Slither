@@ -46,14 +46,12 @@ class Board:
         self.eaten_green = 0
         self.eaten_red = 0
 
-
     def step(self, action: str) -> None:
         """
         Execute one environment step.
         """
         self.calculate_reward(action)
         self.move(action)
-
 
     def reset(
         self,
@@ -72,32 +70,26 @@ class Board:
         )
         self.update_matrix()
 
-
     def calculate_reward(self, action: str) -> None:
         """Compute reward using external module."""
         calculate_reward(self, action)
-
 
     def move(self, action: str) -> None:
         """Move the snake and update the environment."""
         move(self, action)
         self.update_matrix()
 
-
     def game_over(self) -> None:
         """Update environment state when the snake dies."""
         game_over(self)
-
 
     def eat_apples(self) -> None:
         """Check and handle apple consumption."""
         eat_apples(self)
 
-
     def update_matrix(self) -> None:
         """Recompute the board matrix representation."""
         update_matrix(self)
-
 
     def print_board(self) -> None:
         """Print the board matrix (debugging only)."""

@@ -27,7 +27,7 @@ def run_session(cfg: dict, q_table: dict, visual: bool = False, step: bool = Fal
         moves += 1
 
         if visual:          
-            print(state, q_table.get(state, [0, 0, 0]))
+            # print(state, q_table.get(state, [0, 0, 0]))
             visualizer.draw(board)
             if step:
                 visualizer.wait_key()

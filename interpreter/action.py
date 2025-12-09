@@ -12,6 +12,7 @@ decision_offset = {
     'left': 3
 }
 
+
 def direction_to_action(snake_dir, decision):
     """
     Translate a relative snake decision into an absolute action.

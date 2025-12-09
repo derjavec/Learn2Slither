@@ -31,19 +31,24 @@ class Visualizer:
 
         self.screen.fill(self.colors["background"])
 
-        points = [(x * self.cell + self.cell // 2, y * self.cell + self.cell // 2)
+        points = [(x * self.cell + self.cell // 2,
+                  y * self.cell + self.cell // 2)
                   for x, y in board.snake_pos]
         if points:
-            pygame.draw.lines(self.screen, self.colors["snake"], False, points, self.cell // 2)
+            pygame.draw.lines(self.screen,
+                              self.colors["snake"],
+                              False, points, self.cell // 2)
 
         for gx, gy in board.green_apples:
             pygame.draw.circle(self.screen, self.colors["green_apple"],
-                               (gx * self.cell + self.cell // 2, gy * self.cell + self.cell // 2),
+                               (gx * self.cell + self.cell // 2,
+                                gy * self.cell + self.cell // 2),
                                self.cell // 3)
 
         for rx, ry in board.red_apples:
             pygame.draw.circle(self.screen, self.colors["red_apple"],
-                               (rx * self.cell + self.cell // 2, ry * self.cell + self.cell // 2),
+                               (rx * self.cell + self.cell // 2,
+                                ry * self.cell + self.cell // 2),
                                self.cell // 3)
 
         info_text = f"Moves: {moves} | Snake Length: {len(board.snake_pos)}"

@@ -1,7 +1,9 @@
 """
-State representation and observation analysis for the Snake RL environment.
+State representation and observation
+analysis for the Snake RL environment.
 
-Provides functions to extract features from the board for training or inference.
+Provides functions to extract features
+from the board for training or inference.
 """
 
 opposites = {
@@ -44,9 +46,11 @@ dangerous = ["W", "S"]
 
 def snake_view(board, direction):
     """
-    Return the first non-empty cell in the given direction from the snake's head.
+    Return the first non-empty cell in the
+    given direction from the snake's head.
 
-    Stops when hitting a wall, another snake segment, or an apple.
+    Stops when hitting a wall, another snake
+    segment, or an apple.
     """
     snake_x, snake_y = board.snake_pos[0]
     dx, dy = dir_to_delta[direction]
@@ -91,28 +95,19 @@ def analyze_view(board, view):
     """
     Convert a directional view into a feature vector.
     """
-    # first = view[0] if len(view) > 0 else "W"
-    # second = view[1] if len(view) > 1 else "W"
-    # third = view[2] if len(view) > 2 else "W"
 
-    # d1 = 1 if first in dangerous else 0
-    # d2 = 1 if second in dangerous else 0
-    # d3 = 1 if third in dangerous else 0
     dw = calculate_distance(board.size, view, "W")
     ds = calculate_distance(board.size, view, "S")
     dr = calculate_distance(board.size, view, "R")
     dg = calculate_distance(board.size, view, "G")
-
-    # cg = 0
-    # if dg != 0 and dg < board.last_min_dist:
-    #     cg = 1
 
     return dw, ds, dg, dr
 
 
 def get_state_training(board):
     """
-    Return the feature tuple for training, including the count of visits to this state.
+    Return the feature tuple for training,
+    including the count of visits to this state.
     """
     if not board.snake_pos or board.done:
         return
@@ -172,8 +167,8 @@ def get_state(board):
 
     abs_d = dir_to_id[board.snake_dir]
     features.append(abs_d)
-    
+
     abs_last_d = dir_to_id[board.snake_last_dir]
     features.append(abs_last_d)
-    
+ 
     return tuple(features)

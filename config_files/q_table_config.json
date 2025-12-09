@@ -1,6 +1,5 @@
 {
     "sessions": 10000,
-    "batch_size": 10,
     "e_greedy": 0.3,
     "alpha": 0.15,
     "gamma": 0.92,

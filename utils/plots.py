@@ -18,7 +18,8 @@ def plot_eaten_apples(model_stats: dict) -> None:
     width = 0.35
 
     plt.figure(figsize=(10, 6))
-    plt.bar(x - width / 2, green_apples, width, label='Green Apples', color='green')
+    plt.bar(x - width / 2, green_apples, width,
+            label='Green Apples', color='green')
     plt.bar(x + width / 2, red_apples, width, label='Red Apples', color='red')
 
     plt.xticks(x, models)

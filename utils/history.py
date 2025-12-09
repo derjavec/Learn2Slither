@@ -14,7 +14,6 @@ def same_config(config1: dict, config2: dict) -> bool:
     """
     keys_to_compare = [
         "sessions",
-        "batch_size",
         "alpha",
         "gamma",
         "size",
@@ -121,7 +120,8 @@ def load_models(model_id: int = None) -> list[dict]:
     return result
 
 
-def rewrite_history_with_updates(updated_models: list[dict], add_n: int) -> None:
+def rewrite_history_with_updates(updated_models:
+                                 list[dict], add_n: int) -> None:
     """
     Update sessions count and Q-tables in history.json for a set of models.
     """

@@ -5,7 +5,8 @@ Environment reset and object placement utilities for the Snake game.
 import random
 
 
-def reset(self, snake_size: int, green_apples_q: int, red_apples_q: int) -> None:
+def reset(self, snake_size: int,
+          green_apples_q: int, red_apples_q: int) -> None:
     """
     Reset the board state.
 
@@ -48,5 +49,6 @@ def random_empty_cell(self) -> tuple:
     while True:
         x = random.randint(0, self.size - 1)
         y = random.randint(0, self.size - 1)
-        if (x, y) not in (self.snake_pos + self.green_apples + self.red_apples):
+        if (x, y) not in (self.snake_pos
+                          + self.green_apples + self.red_apples):
             return (x, y)

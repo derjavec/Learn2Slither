@@ -28,8 +28,6 @@ def take_decision(
     q_max = max(q_values)
     diff = q_max - q_min
 
-    q_values_int = [int(x) for x in q_values]
-
     if (diff < size * 3 and q_min > 0):
         idx = random.randint(0, 2)
     else:

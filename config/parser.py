@@ -2,11 +2,9 @@ import argparse
 import json
 import os
 import ast
-import numpy as np
 
 DEFAULT_CONFIG = {
     "sessions": 10000,
-    "batch_size": 100,
     "e_greedy": 0.3,
     "alpha": 0.1,
     "gamma": 0.9,
@@ -52,7 +50,7 @@ def replace_dict_values(base: dict, new: dict) -> dict:
     for k, v in new.items():
         if v is not None:
             base[k] = v
-    
+
     return base
 
 
@@ -60,44 +58,65 @@ def check_config(config: dict):
     """
     Validate Q-learning configuration.
     """
-    required_keys = ["sessions", "batch_size", "e_greedy", "alpha", "gamma", "size", "green_apples", "red_apples"]
+    required_keys = ["sessions",  "e_greedy",
+                     "alpha", "gamma", "size",
+                     "green_apples", "red_apples"]
+
     apples = ["green_apples", "red_apples"]
     coef = ["alpha", "gamma", "e_greedy"]
     for key in required_keys:
         if key not in config:
             raise ValueError(f"Configuration Error: missing key '{key}'")
         if isinstance(config[key], (int, float)) and config[key] < 0:
-            raise ValueError(f"Configuration Error: '{key}' must be non-negative")
+            raise ValueError(f"Configuration Error:\
+                             '{key}' must be non-negative")
         if config['size'] < 5:
-            raise ValueError(f"Configuration Error: board size must be greater than 5")
+            raise ValueError("Configuration Error:\
+                             board size must be greater than 5")
         for app in apples:
             if config[app] < 1:
-                raise ValueError(f"Configuration Error: {app} must be greater than 1")
+                raise ValueError(f"Configuration Error:\
+                                 {app} must be greater than 1")
         for c in coef:
             if config[c] > 1:
-                raise ValueError(f"Configuration Error: {c} must be between 0 and 1")
+                raise ValueError(f"Configuration Error: {c}\
+                                 must be between 0 and 1")
 
 
 def get_config() -> dict:
     """
-    Load and parse the configuration from defaults, command-line arguments,
+    Load and parse the configuration from defaults,
+    command-line arguments,
     or a file.
     """
     config = DEFAULT_CONFIG.copy()
 
-    parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
+    parser = argparse.\
+        ArgumentParser(description="Train a Q-learning Snake agent")
 
-    parser.add_argument("--add_sessions", type=int, help="Adding episodes to training")
-    parser.add_argument("--model_id", type=int, help="Adding episodes to training")
-    parser.add_argument("--sessions", type=int, help="Number of sessions")
-    parser.add_argument("--batch_size", type=int, help="Batch size")
-    parser.add_argument("--e_greedy", type=float, help="Epsilon greedy probability")
-    parser.add_argument("--alpha", type=float, help="Learning rate")
-    parser.add_argument("--gamma", type=float, help="Discount factor")
-    parser.add_argument("--size", type=int, help="Board size")
-    parser.add_argument("--green_apples", type=int, help="Number of green apples")
-    parser.add_argument("--red_apples", type=int, help="Number of red apples")
-    parser.add_argument("--config_file", type=str,nargs = '?', help="Path to JSON or TXT config file")
+    parser.add_argument("--add_sessions",
+                        type=int, help="Adding episodes to training")
+    parser.add_argument("--model_id",
+                        type=int, help="Adding episodes to training")
+    parser.add_argument("--sessions",
+                        type=int, help="Number of sessions")
+    parser.add_argument("--batch_size",
+                        type=int, help="Batch size")
+    parser.add_argument("--e_greedy",
+                        type=float, help="Epsilon greedy probability")
+    parser.add_argument("--alpha",
+                        type=float, help="Learning rate")
+    parser.add_argument("--gamma",
+                        type=float, help="Discount factor")
+    parser.add_argument("--size",
+                        type=int, help="Board size")
+    parser.add_argument("--green_apples",
+                        type=int, help="Number of green apples")
+    parser.add_argument("--red_apples",
+                        type=int, help="Number of red apples")
+    parser.add_argument("--config_file",
+                        type=str, nargs='?', help="Path\
+                        to JSON or TXT config file")
 
     args = parser.parse_args()
     args_dict = vars(args)
@@ -111,19 +130,3 @@ def get_config() -> dict:
     check_config(config)
 
     return args.add_sessions, args.model_id, config
-
-
-# def check_add_episodes(parser):
-#     # parser = argparse.ArgumentParser(description="Train a Q-learning Snake agent")
-#     # parser.add_argument("--add_episodes", type=int)
-#     # parser.add_argument("--model_id", type=int)
-#     args = parser.parse_args()
-
-#     if args.sessions is None:
-#         if args.load:
-#             raise ValueError("model_id only valid with add_episodes")
-#         return None
-
-#     return args.sessions, args.load
-
-
