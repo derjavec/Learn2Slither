@@ -170,5 +170,5 @@ def get_state(board):
 
     abs_last_d = dir_to_id[board.snake_last_dir]
     features.append(abs_last_d)
- 
+
     return tuple(features)
